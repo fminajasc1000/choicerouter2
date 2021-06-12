@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="bd8f8483-cc9a-4a19-906f-0be552669e73" >
+		<http:listener-connection host="0.0.0.0" port="8089" />
+	</http:listener-config>
+	<flow name="choicerouter2Flow" doc:id="de2b07b0-a478-4a43-b8b1-0b1c1802f1f6" >
+		<http:listener doc:name="Listener" doc:id="973375fd-45e2-4469-99fc-43d26516abb4" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-variable value="#[attributes.queryParams.user]" doc:name="Set Variable User" doc:id="b8d686ec-fde6-4919-82d3-f1fb2a2085f4" variableName="Username"/>
+		<set-variable value="#[attributes.queryParams.lastname]" doc:name="Set Variable" doc:id="74ee6c84-5fbc-4885-819d-47e48e6368fe" variableName="Lastname"/>
+		<choice doc:name="Choice" doc:id="cc3cd05b-2855-408d-87ec-59c728e8693a" >
+			<when expression="#[vars.Username]">
+				<set-payload value="payload" doc:name="Set Payload" doc:id="0fc5cd03-8031-432d-8ee0-66fe16b14657" />
+			</when>
+			<when expression="#[vars.Lastname]">
+				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="c1a58555-cf4b-41b6-ab03-ae022ae96665" />
+			</when>
+			<otherwise >
+				<set-payload value="Error" doc:name="Set Payload" doc:id="a9ac34c2-d287-4d50-af77-9c26ce7e4ca8" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
